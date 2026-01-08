@@ -36,5 +36,6 @@ public class Animal {
     private LocalDate fechaIngreso;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean deleted = false;
 }
