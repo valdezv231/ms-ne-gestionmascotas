@@ -1,5 +1,6 @@
 package com.example.msnegestionmascotas.controller;
 
+import com.example.msnegestionmascotas.dto.header.AnimalHeaders;
 import com.example.msnegestionmascotas.dto.request.AnimalRequest;
 import com.example.msnegestionmascotas.dto.response.AnimalResponse;
 import com.example.msnegestionmascotas.enums.EspecieAnimal;
@@ -10,18 +11,33 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/animales")
+@Validated
 @RequiredArgsConstructor
 public class AnimalController {
 
     private final AnimalService service;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public AnimalResponse crear(@Valid @RequestBody AnimalRequest request){
+    public AnimalResponse crear(
+            @RequestHeader("Id-Transaccion") String idTransaccion,
+            @RequestHeader("Application-Name") String applicationName,
+            @RequestHeader("Application-Code") String applicationCode,
+            @RequestHeader("Consumer-Id") String consumerId,
+            @Valid @RequestBody AnimalRequest request
+    ) {
+
+        new AnimalHeaders(
+                idTransaccion,
+                applicationName,
+                applicationCode,
+                consumerId
+        );
+
         return service.crear(request);
     }
 
