@@ -1,11 +1,9 @@
 package com.example.msnegestionmascotas.controller;
 
-import com.example.msnegestionmascotas.dto.header.AnimalHeaders;
 import com.example.msnegestionmascotas.dto.request.AnimalRequest;
 import com.example.msnegestionmascotas.dto.response.AnimalResponse;
 import com.example.msnegestionmascotas.enums.EspecieAnimal;
 import com.example.msnegestionmascotas.service.AnimalService;
-import com.example.msnegestionmascotas.service.HeaderValidationService;
 import jakarta.validation.*;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class AnimalController {
 
     private final AnimalService service;
-    private final HeaderValidationService headerValidationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
