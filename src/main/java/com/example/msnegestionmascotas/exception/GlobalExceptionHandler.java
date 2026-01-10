@@ -3,7 +3,6 @@ package com.example.msnegestionmascotas.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -30,16 +29,13 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<ErrorResponse> handleMissingHeader(
-            MissingRequestHeaderException ex
-    ) {
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex) {
         ErrorResponse error = new ErrorResponse(
-                "HEADER_FALTANTE",
-                "No se envió el header obligatorio: " + ex.getHeaderName(),
+                "FORBIDDEN",
+                ex.getMessage(),
                 LocalDateTime.now()
         );
-
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }

@@ -5,6 +5,7 @@ import com.example.msnegestionmascotas.dto.request.AnimalRequest;
 import com.example.msnegestionmascotas.dto.response.AnimalResponse;
 import com.example.msnegestionmascotas.enums.EspecieAnimal;
 import com.example.msnegestionmascotas.service.AnimalService;
+import com.example.msnegestionmascotas.service.HeaderValidationService;
 import jakarta.validation.*;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -21,23 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class AnimalController {
 
     private final AnimalService service;
+    private final HeaderValidationService headerValidationService;
 
     @PostMapping
-    public AnimalResponse crear(
-            @RequestHeader("Id-Transaccion") String idTransaccion,
-            @RequestHeader("Application-Name") String applicationName,
-            @RequestHeader("Application-Code") String applicationCode,
-            @RequestHeader("Consumer-Id") String consumerId,
-            @Valid @RequestBody AnimalRequest request
-    ) {
-
-        new AnimalHeaders(
-                idTransaccion,
-                applicationName,
-                applicationCode,
-                consumerId
-        );
-
+    @ResponseStatus(HttpStatus.CREATED)
+    public AnimalResponse crear(@Valid @RequestBody AnimalRequest request) {
         return service.crear(request);
     }
 

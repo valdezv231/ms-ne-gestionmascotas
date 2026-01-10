@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AnimalRepositoryTest {
+class AnimalEntityRepositoryTest {
 
     @Test
     void findByIdAndDeletedFalse() {
