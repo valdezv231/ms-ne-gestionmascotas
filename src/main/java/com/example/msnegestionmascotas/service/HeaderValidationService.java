@@ -1,37 +1,44 @@
 package com.example.msnegestionmascotas.service;
 
 import com.example.msnegestionmascotas.dto.header.AnimalHeaders;
-import com.example.msnegestionmascotas.entity.ApplicationEntity;
 import com.example.msnegestionmascotas.exception.ForbiddenException;
+import com.example.msnegestionmascotas.exception.HeaderValidationException;
 import com.example.msnegestionmascotas.repository.ApplicationRepository;
-import com.example.msnegestionmascotas.repository.ConsumerRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class HeaderValidationService {
 
-    private final ApplicationRepository applicationRepository;
-    private final ConsumerRepository consumerRepository;
+    private final ApplicationRepository repository;
+    private final Validator validator;
 
     public void validate(AnimalHeaders headers) {
 
-        ApplicationEntity app = applicationRepository
-                .findByApplicationCodeAndEnabledTrue(headers.applicationCode())
-                .orElseThrow(() -> new ForbiddenException(
-                        "Application-Code no autorizado"
-                ));
+        Set<ConstraintViolation<AnimalHeaders>> violations =
+                validator.validate(headers);
 
-        if (!app.getApplicationName().equals(headers.applicationName())) {
-            throw new ForbiddenException("Application-Name no coincide");
+        if (!violations.isEmpty()) {
+            throw new HeaderValidationException(
+                    violations.iterator().next().getMessage()
+            );
         }
 
-        consumerRepository
-                .findByConsumerIdAndEnabledTrue(headers.consumerId())
-                .orElseThrow(() -> new ForbiddenException(
-                        "Consumer-Id no autorizado"
-                ));
+        boolean exists = repository
+                .existsByApplicationNameAndApplicationCodeAndConsumerIdAndActiveTrue(
+                        headers.applicationName(),
+                        headers.applicationCode(),
+                        headers.consumerId()
+                );
+
+        if (!exists) {
+            throw new ForbiddenException(
+                    "Aplicación no autorizada para consumir el servicio"
+            );
+        }
     }
 }
-

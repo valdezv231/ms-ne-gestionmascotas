@@ -4,16 +4,17 @@ import com.example.msnegestionmascotas.enums.EspecieAnimal;
 import jakarta.validation.constraints.*;
 
 public record AnimalRequest(
-        @NotBlank
-        @Size(min=3)
+
+        @NotBlank(message = "El nombre es obligatorio")
         String nombre,
 
+        @NotNull(message = "La especie es obligatoria")
         EspecieAnimal especie,
 
-        @Min(0)
-        Integer edad,
+        @Min(value = 0, message = "La edad no puede ser negativa")
+        int edad,
 
-        @Positive
-        Double peso
-) {
-}
+        @Positive(message = "El peso debe ser mayor a 0")
+        double peso
+) {}
+

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @RequiredArgsConstructor
 public class HeaderValidationInterceptor implements HandlerInterceptor {
 
-    private final HeaderValidationService headerValidationService;
+    private final HeaderValidationService service;
 
     @Override
     public boolean preHandle(
@@ -27,8 +27,9 @@ public class HeaderValidationInterceptor implements HandlerInterceptor {
                 request.getHeader("Application-Code"),
                 request.getHeader("Consumer-Id")
         );
-        headerValidationService.validate(headers);
 
+        service.validate(headers);
         return true;
     }
 }
+
