@@ -1,6 +1,1 @@
-spring:
-  datasource:
-    url: jdbc:sqlserver://valdezv231.database.windows.net:1433;database=free-sql-db-1180422
-    username: valdezv231@valdezv231
-    password: 72757455aS*
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
