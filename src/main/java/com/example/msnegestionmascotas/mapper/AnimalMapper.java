@@ -2,15 +2,17 @@ package com.example.msnegestionmascotas.mapper;
 
 import com.example.msnegestionmascotas.dto.request.AnimalRequest;
 import com.example.msnegestionmascotas.dto.response.AnimalResponse;
-import com.example.msnegestionmascotas.entity.Animal;
+import com.example.msnegestionmascotas.entity.AnimalEntity;
 import com.example.msnegestionmascotas.enums.EstadoAnimal;
 
 import java.time.LocalDate;
 
 public class AnimalMapper {
 
-    public static Animal toEntity(AnimalRequest request){
-        return Animal.builder()
+    private AnimalMapper() {}
+
+    public static AnimalEntity toEntity(AnimalRequest request) {
+        return AnimalEntity.builder()
                 .nombre(request.nombre())
                 .especie(request.especie())
                 .edad(request.edad())
@@ -21,15 +23,15 @@ public class AnimalMapper {
                 .build();
     }
 
-    public static AnimalResponse toResponse(Animal animal){
+    public static AnimalResponse toResponse(AnimalEntity entity) {
         return new AnimalResponse(
-                animal.getId(),
-                animal.getNombre(),
-                animal.getEspecie().name(),
-                animal.getEdad(),
-                animal.getPeso(),
-                animal.getEstado().name(),
-                animal.getFechaIngreso()
+                entity.getId(),
+                entity.getNombre(),
+                entity.getEspecie().name(),
+                entity.getEdad(),
+                entity.getPeso(),
+                entity.getEstado().name(),
+                entity.getFechaIngreso()
         );
     }
 }

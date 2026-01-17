@@ -10,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/animales")
+@Validated
 @RequiredArgsConstructor
 public class AnimalController {
 
@@ -21,7 +23,7 @@ public class AnimalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AnimalResponse crear(@Valid @RequestBody AnimalRequest request){
+    public AnimalResponse crear(@Valid @RequestBody AnimalRequest request) {
         return service.crear(request);
     }
 

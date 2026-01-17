@@ -13,7 +13,6 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("API Refugio de Animales")
-                        .version("1.0.0")
                         .description("API REST para la gestión de animales"));
     }
 }

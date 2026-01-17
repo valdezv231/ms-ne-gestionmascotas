@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Animal {
+public class AnimalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,5 +36,6 @@ public class Animal {
     private LocalDate fechaIngreso;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean deleted = false;
 }
