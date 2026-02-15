@@ -1,12 +1,15 @@
 package com.example.msnegestionmascotas.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -47,14 +50,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
-    @ExceptionHandler(HeaderValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleHeaderValidation(HeaderValidationException ex) {
-        return new ErrorResponse(
-                "HEADER_VALIDATION_ERROR",
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-    }
+    @ExceptionHandler(MissingHeaderException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingHeaders(
+            MissingHeaderException ex
+    ) {
 
+        log.warn("Validación de headers fallida: {}", ex.getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of(
+                        "error", "VALIDATION_ERROR",
+                        "message", ex.getMessage()
+                ));
+    }
 }

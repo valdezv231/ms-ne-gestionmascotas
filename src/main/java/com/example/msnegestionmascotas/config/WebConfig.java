@@ -10,11 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final HeaderValidationInterceptor headerValidationInterceptor;
+    private final HeaderValidationInterceptor interceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(headerValidationInterceptor)
-                .addPathPatterns("/api/**");
+        registry.addInterceptor(interceptor)
+                .addPathPatterns("/**");
     }
 }

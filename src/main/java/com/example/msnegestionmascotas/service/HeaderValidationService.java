@@ -1,44 +1,38 @@
 package com.example.msnegestionmascotas.service;
 
-import com.example.msnegestionmascotas.dto.Headers;
-import com.example.msnegestionmascotas.exception.ForbiddenException;
-import com.example.msnegestionmascotas.exception.HeaderValidationException;
-import com.example.msnegestionmascotas.repository.ApplicationRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
+import com.example.msnegestionmascotas.repository.ApplicationClientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class HeaderValidationService {
 
-    private final ApplicationRepository repository;
-    private final Validator validator;
+    private final ApplicationClientRepository repository;
 
-    public void validate(Headers headers) {
+    public HeaderValidationService(ApplicationClientRepository repository) {
+        this.repository = repository;
+    }
 
-        Set<ConstraintViolation<Headers>> violations =
-                validator.validate(headers);
+    public void validate(
+            String applicationName,
+            String applicationCode,
+            String consumerId
+    ) {
 
-        if (!violations.isEmpty()) {
-            throw new HeaderValidationException(
-                    violations.iterator().next().getMessage()
-            );
-        }
+        log.info("Validando headers contra BD...");
 
-        boolean exists = repository
-                .existsByApplicationNameAndApplicationCodeAndConsumerId(
-                        headers.applicationName(),
-                        headers.applicationCode(),
-                        headers.consumerId()
-                );
+        repository
+                .findByApplicationNameAndApplicationCodeAndConsumerId(
+                        applicationName,
+                        applicationCode,
+                        consumerId
+                )
+                .orElseThrow(() -> {
+                    log.error("Aplicación no autorizada");
+                    return new RuntimeException("Aplicación no autorizada");
+                });
 
-        if (!exists) {
-            throw new ForbiddenException(
-                    "Aplicación no autorizada para consumir el servicio"
-            );
-        }
+        log.info("Validación exitosa");
     }
 }
